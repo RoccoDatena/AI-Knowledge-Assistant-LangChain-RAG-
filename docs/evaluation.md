@@ -57,3 +57,15 @@ python -m scripts.evaluate_retrieval --corpus evaluation/corpus.json
 
 This mode is fully offline and reproducible. It is useful for comparing vector
 store or embedding adapters before evaluating a real document collection.
+### Observed fixture results
+
+On the bundled corpus, the current local checks produce:
+
+| Embedding provider | Hit@4 | MRR |
+| --- | ---: | ---: |
+| Hashing baseline | 1.00 | 0.8229 |
+| `all-MiniLM-L6-v2` | 1.00 | 0.8750 |
+
+These values are reference measurements for the synthetic corpus, not a claim
+about production document quality. A real evaluation set should be added before
+making model or provider decisions.
