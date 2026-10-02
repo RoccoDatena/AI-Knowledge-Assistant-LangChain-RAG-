@@ -44,8 +44,16 @@ python -m scripts.check_semantic_embeddings
 
 The first execution downloads the configured model if it is not already in the
 Hugging Face cache.
+## Evaluate the bundled offline corpus
 
+The repository includes `evaluation/corpus.json`, a small deterministic corpus
+with eight chunks matching the benchmark queries. Evaluate it without using the
+persistent application data:
 
+```powershell
+$env:EMBEDDING_PROVIDER="hashing"
+python -m scripts.evaluate_retrieval --corpus evaluation/corpus.json
+```
 
-
-
+This mode is fully offline and reproducible. It is useful for comparing vector
+store or embedding adapters before evaluating a real document collection.

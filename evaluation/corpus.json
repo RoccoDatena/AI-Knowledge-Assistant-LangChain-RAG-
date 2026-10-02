@@ -1,0 +1,10 @@
+[
+  {"chunk_id":"demo-document:0","document_id":"demo-document","content":"Per caricare un documento, usa l'endpoint POST /documents/upload e seleziona un PDF testuale.","page_number":1,"chunk_index":0},
+  {"chunk_id":"demo-document:1","document_id":"demo-document","content":"Le risposte grounded mostrano citazioni con filename, pagina e chunk di origine.","page_number":2,"chunk_index":1},
+  {"chunk_id":"demo-document:2","document_id":"demo-document","content":"Se non viene trovata evidenza sufficiente, il sistema risponde: Informazione non trovata nei documenti.","page_number":3,"chunk_index":2},
+  {"chunk_id":"operations-guide:0","document_id":"operations-guide","content":"La cronologia delle conversazioni viene persistita nei file JSON sotto data/conversations.","page_number":1,"chunk_index":0},
+  {"chunk_id":"operations-guide:1","document_id":"operations-guide","content":"L'endpoint GET /health verifica che il servizio API sia attivo.","page_number":2,"chunk_index":1},
+  {"chunk_id":"security-guide:0","document_id":"security-guide","content":"Gli upload PDF sono limitati per dimensione, verificati con magic header e salvati con UUID.","page_number":1,"chunk_index":0},
+  {"chunk_id":"architecture-guide:0","document_id":"architecture-guide","content":"Il provider LLM è astratto tramite una porta e può essere sostituito con OpenRouter, Bedrock, OpenAI o Anthropic.","page_number":1,"chunk_index":0},
+  {"chunk_id":"architecture-guide:1","document_id":"architecture-guide","content":"Il vector store JSON persistente è il componente predefinito per mantenere leggero lo sviluppo locale.","page_number":2,"chunk_index":1}
+]

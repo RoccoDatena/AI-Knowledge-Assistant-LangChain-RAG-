@@ -30,9 +30,11 @@
 - Optional frontend dependency installation wired correctly in its image
 - Reproducible semantic embedding verification script
 - Reproducible portfolio demo walkthrough
+- Deterministic offline retrieval corpus and evaluation CLI mode
 - Docker dependency profile documented for lightweight deployments
 - Upload path traversal protection test
 - Ruff, mypy, pytest, and GitHub Actions CI
+
 
 
 
