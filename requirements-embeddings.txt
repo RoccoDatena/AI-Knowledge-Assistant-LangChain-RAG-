@@ -1,0 +1,3 @@
+# Install this optional file only when using local semantic embeddings.
+-r requirements.txt
+sentence-transformers==6.0.0

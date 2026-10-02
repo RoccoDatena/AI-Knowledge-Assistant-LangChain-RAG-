@@ -1,0 +1,10 @@
+[
+  {
+    "query": "Come posso caricare un documento?",
+    "relevant_chunk_ids": ["demo-document:0"]
+  },
+  {
+    "query": "Quali fonti vengono mostrate nella risposta?",
+    "relevant_chunk_ids": ["demo-document:1"]
+  }
+]
