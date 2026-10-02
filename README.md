@@ -1,5 +1,7 @@
 # AI Knowledge Assistant
 
+[![CI](https://github.com/RoccoDatena/AI-Knowledge-Assistant-LangChain-RAG-/actions/workflows/ci.yml/badge.svg)](https://github.com/RoccoDatena/AI-Knowledge-Assistant-LangChain-RAG-/actions/workflows/ci.yml)
+
 An extensible, document-grounded conversational assistant built with Python,
 FastAPI, LangChain, and a provider-agnostic AI architecture.
 
@@ -173,5 +175,7 @@ See [docs/portfolio-demo.md](docs/portfolio-demo.md) for the reproducible end-to
 ## License
 
 MIT License. See [LICENSE](LICENSE).
+
+
 
 
