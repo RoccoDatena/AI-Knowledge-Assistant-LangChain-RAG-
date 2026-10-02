@@ -85,7 +85,8 @@ async def upload_document(
 ) -> DocumentResponse:
     """Validate, store, and inspect a text-based PDF."""
 
-    filename = Path(file.filename or "").name
+    # Normalize both Windows and POSIX separators before taking the basename.
+    filename = Path((file.filename or "").replace("\\", "/")).name
     if not filename or Path(filename).suffix.lower() != ".pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are supported")
 
