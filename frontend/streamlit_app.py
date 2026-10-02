@@ -74,6 +74,46 @@ def render_document_panel(client: ApiClient) -> None:
         st.sidebar.warning(f"Backend non disponibile: {exc}")
 
 
+def render_search_panel(client: ApiClient) -> None:
+    """Render an optional semantic search panel with metadata filters."""
+
+    st.sidebar.divider()
+    st.sidebar.subheader("Ricerca semantica")
+    query = st.sidebar.text_input("Query di ricerca", key="search-query")
+    try:
+        documents = client.list_documents()
+        document_options = {"Tutti i documenti": None}
+        document_options.update(
+            {document["filename"]: document["document_id"] for document in documents}
+        )
+        selected_filename = st.sidebar.selectbox(
+            "Documento",
+            options=list(document_options),
+            key="search-document",
+        )
+        page_number = st.sidebar.number_input(
+            "Pagina (0 = tutte)", min_value=0, value=0, step=1, key="search-page"
+        )
+        if st.sidebar.button("Cerca chunk", disabled=not query.strip()):
+            results = client.search_documents(
+                query=query,
+                document_id=document_options[selected_filename],
+                page_number=page_number or None,
+            )
+            if not results:
+                st.sidebar.info("Nessun chunk rilevante trovato.")
+            for result in results:
+                st.sidebar.caption(
+                    f"{result['chunk_id']} · pagina {result['page_number']} · "
+                    f"score {result['score']:.2f}"
+                )
+                st.sidebar.write(result["content"])
+    except ApiClientError as exc:
+        st.sidebar.warning(f"Ricerca non disponibile [{exc.code}]: {exc}")
+    except Exception as exc:
+        st.sidebar.warning(f"Ricerca non disponibile: {exc}")
+
+
 def main() -> None:
     """Render the application."""
 
@@ -106,6 +146,7 @@ def main() -> None:
             return
 
     render_document_panel(client)
+    render_search_panel(client)
     try:
         history = client.get_history(st.session_state.conversation_id)
         for message in history["messages"]:

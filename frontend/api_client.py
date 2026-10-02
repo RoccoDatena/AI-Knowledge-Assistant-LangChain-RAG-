@@ -63,6 +63,29 @@ class ApiClient:
         self._ensure_success(response)
         return response.json()
 
+    def search_documents(
+        self,
+        query: str,
+        limit: int = 4,
+        min_score: float = 0.0,
+        document_id: str | None = None,
+        page_number: int | None = None,
+    ) -> list[dict[str, Any]]:
+        """Search indexed chunks with optional source metadata filters."""
+
+        payload: dict[str, Any] = {
+            "query": query,
+            "limit": limit,
+            "min_score": min_score,
+        }
+        if document_id:
+            payload["document_id"] = document_id
+        if page_number is not None:
+            payload["page_number"] = page_number
+        response = self._client.post("/documents/search", json=payload)
+        self._ensure_success(response)
+        return response.json()
+
     def delete_document(self, document_id: str) -> None:
         response = self._client.delete(f"/documents/{document_id}")
         self._ensure_success(response)
