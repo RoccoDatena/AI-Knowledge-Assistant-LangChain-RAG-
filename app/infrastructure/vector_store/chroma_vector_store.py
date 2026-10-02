@@ -1,5 +1,6 @@
 """Optional ChromaDB vector store adapter."""
 
+from importlib import import_module
 from pathlib import Path
 from typing import Any
 
@@ -15,7 +16,7 @@ class ChromaVectorStore:
 
     def __init__(self, path: Path, collection_name: str = "knowledge_chunks") -> None:
         try:
-            import chromadb
+            chromadb: Any = import_module("chromadb")
         except ImportError as exc:
             raise ChromaConfigurationError(
                 "ChromaDB is not installed; use VECTOR_STORE=json or install chromadb"
