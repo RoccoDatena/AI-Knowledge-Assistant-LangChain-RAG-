@@ -1,10 +1,34 @@
 [
   {
-    "query": "Come posso caricare un documento?",
+    "query": "Come posso caricare un documento PDF?",
     "relevant_chunk_ids": ["demo-document:0"]
   },
   {
     "query": "Quali fonti vengono mostrate nella risposta?",
     "relevant_chunk_ids": ["demo-document:1"]
+  },
+  {
+    "query": "Come viene gestita una domanda senza evidenza nei documenti?",
+    "relevant_chunk_ids": ["demo-document:2"]
+  },
+  {
+    "query": "Dove viene salvata la cronologia della conversazione?",
+    "relevant_chunk_ids": ["operations-guide:0"]
+  },
+  {
+    "query": "Quale endpoint verifica lo stato dell'API?",
+    "relevant_chunk_ids": ["operations-guide:1"]
+  },
+  {
+    "query": "Come vengono protetti i file PDF caricati?",
+    "relevant_chunk_ids": ["security-guide:0"]
+  },
+  {
+    "query": "È possibile sostituire il provider LLM?",
+    "relevant_chunk_ids": ["architecture-guide:0"]
+  },
+  {
+    "query": "Quale vector store viene usato per default?",
+    "relevant_chunk_ids": ["architecture-guide:1"]
   }
 ]

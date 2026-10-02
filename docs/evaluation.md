@@ -12,8 +12,10 @@ LLM, which makes provider and embedding comparisons reproducible.
   position one scores `1.0`; position two scores `0.5`.
 
 The evaluator accepts a list of `RetrievalExample` objects containing a query
-and the expected relevant chunk IDs. The current test suite uses a deterministic
-fake retriever; a future evaluation dataset can use real document fixtures.
+and the expected relevant chunk IDs. The versioned dataset contains eight
+queries across ingestion, safety, operations, and architecture scenarios. The
+chunk IDs are intentionally explicit so the same benchmark can be reused with
+different retriever implementations.
 
 The JSON dataset contract is demonstrated in
 `evaluation/retrieval_examples.json` and can be loaded with
@@ -42,5 +44,8 @@ python -m scripts.check_semantic_embeddings
 
 The first execution downloads the configured model if it is not already in the
 Hugging Face cache.
+
+
+
 
 
