@@ -38,7 +38,7 @@ Open `http://127.0.0.1:8501`.
 
 ## 4. Demonstrate the RAG flow
 
-1. Create a conversation in the sidebar.
+1. Create a conversation in the sidebar, or click **Nuova conversazione** to start a separate session.
 2. Upload a text-based PDF.
 3. Click **Index documents**.
 4. Ask a question whose answer is present in the PDF.
@@ -55,3 +55,11 @@ ruff check .
 ```
 
 The demo keeps runtime data under `data/`, which is excluded from Git.
+
+## Semantic search diagnostics
+
+Use the **Ricerca semantica** panel in the sidebar to inspect retrieval before
+asking a chat question. Enter a query and optionally filter by document and
+page. The panel displays the retrieved chunk, source page, and relevance score.
+
+
