@@ -23,9 +23,11 @@ class SentenceTransformersEmbeddingProvider:
     def __init__(
         self,
         model_name: str = "all-MiniLM-L6-v2",
+        local_files_only: bool = False,
         encoder: Encoder | None = None,
     ) -> None:
         self._model_name = model_name
+        self._local_files_only = local_files_only
         self._encoder = encoder
 
     def _get_encoder(self) -> Encoder:
@@ -41,7 +43,10 @@ class SentenceTransformersEmbeddingProvider:
                 "Sentence Transformers is optional. Install it before using "
                 "SentenceTransformersEmbeddingProvider."
             ) from exc
-        self._encoder = sentence_transformer(self._model_name)
+        self._encoder = sentence_transformer(
+            self._model_name,
+            local_files_only=self._local_files_only,
+        )
         return self._encoder
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:

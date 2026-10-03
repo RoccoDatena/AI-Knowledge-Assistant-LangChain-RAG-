@@ -10,7 +10,7 @@ from app.application.prompt_builder import ConversationPromptBuilder
 from app.application.rag import RagService
 from app.application.retrieval import RetrievalService
 from app.core.config import get_settings
-from app.domain.entities import Message
+from app.domain.entities import Message, MessageSource
 from app.domain.ports import ConversationRepository, LLMProvider
 from app.infrastructure.llm.mock_llm import MockLLM
 from app.infrastructure.llm.openrouter_adapter import OpenRouterAdapter
@@ -28,10 +28,20 @@ class ConversationResponse(BaseModel):
     message_count: int
 
 
+class HistoryMessageResponse(BaseModel):
+    """Public representation of a persisted conversation message."""
+
+    role: str
+    content: str
+    created_at: str
+    grounded: bool | None = None
+    sources: list[dict[str, str | int | float]] = Field(default_factory=list)
+
+
 class ConversationHistoryResponse(ConversationResponse):
     """Public representation including conversation messages."""
 
-    messages: list[dict[str, str]]
+    messages: list[HistoryMessageResponse]
 
 
 class SendMessageRequest(BaseModel):
@@ -97,6 +107,7 @@ def get_rag_service(
         llm_provider,
         RagPromptBuilder(),
         min_score=get_settings().rag_min_score,
+        require_lexical_evidence=get_settings().rag_require_lexical_evidence,
     )
 
 
@@ -133,11 +144,22 @@ def get_conversation_history(
         created_at=conversation.created_at.isoformat(),
         message_count=len(conversation.messages),
         messages=[
-            {
-                "role": message.role,
-                "content": message.content,
-                "created_at": message.created_at.isoformat(),
-            }
+            HistoryMessageResponse(
+                role=message.role,
+                content=message.content,
+                created_at=message.created_at.isoformat(),
+                grounded=message.grounded,
+                sources=[
+                    {
+                        "document_id": source.document_id,
+                        "filename": source.filename,
+                        "page_number": source.page_number,
+                        "chunk_id": source.chunk_id,
+                        "score": source.score,
+                    }
+                    for source in message.sources
+                ],
+            )
             for message in conversation.messages
         ],
     )
@@ -185,6 +207,17 @@ def send_message(
         role="assistant",
         content=rag_answer.answer,
         created_at=datetime.now(UTC),
+        grounded=rag_answer.grounded,
+        sources=[
+            MessageSource(
+                document_id=citation.document_id,
+                filename=citation.filename,
+                page_number=citation.page_number,
+                chunk_id=citation.chunk_id,
+                score=citation.score,
+            )
+            for citation in rag_answer.citations
+        ],
     )
     repository.add_message(conversation_id, assistant_message)
 

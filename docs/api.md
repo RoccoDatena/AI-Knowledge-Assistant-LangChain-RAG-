@@ -27,7 +27,10 @@ GET  /conversations/{id}/history
 ```
 
 The chat response includes `grounded` and `sources`. If no relevant context
-is found, `grounded` is false and `sources` is empty.
+is found, `grounded` is false and `sources` is empty. The same metadata is
+persisted on assistant messages and returned by the conversation history
+endpoint, so citations remain available after a refresh. Existing JSON
+conversations without these optional fields remain readable.
 
 ## Error contract
 

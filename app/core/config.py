@@ -19,10 +19,12 @@ class Settings:
     request_timeout_seconds: float = 30.0
     data_directory: str = "data"
     rag_min_score: float = 0.15
+    rag_require_lexical_evidence: bool = True
     max_upload_bytes: int = 10 * 1024 * 1024
     vector_store: str = "json"
     embedding_provider: str = "hashing"
     embedding_model: str = "all-MiniLM-L6-v2"
+    embedding_local_files_only: bool = False
 
     def validate(self) -> "Settings":
         """Validate settings before application services use them."""
@@ -59,8 +61,16 @@ def get_settings() -> Settings:
         request_timeout_seconds=float(os.getenv("REQUEST_TIMEOUT_SECONDS", "30")),
         data_directory=os.getenv("DATA_DIRECTORY", "data"),
         rag_min_score=float(os.getenv("RAG_MIN_SCORE", "0.15")),
+        rag_require_lexical_evidence=os.getenv(
+            "RAG_REQUIRE_LEXICAL_EVIDENCE", "true"
+        ).lower()
+        in {"1", "true", "yes", "on"},
         max_upload_bytes=int(os.getenv("MAX_UPLOAD_BYTES", str(10 * 1024 * 1024))),
         vector_store=os.getenv("VECTOR_STORE", "json"),
         embedding_provider=os.getenv("EMBEDDING_PROVIDER", "hashing"),
         embedding_model=os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
+        embedding_local_files_only=os.getenv(
+            "EMBEDDING_LOCAL_FILES_ONLY", "false"
+        ).lower()
+        in {"1", "true", "yes", "on"},
     ).validate()

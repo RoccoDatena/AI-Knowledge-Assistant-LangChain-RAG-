@@ -1,5 +1,6 @@
 """Grounded retrieval-augmented generation use case."""
 
+import re
 from dataclasses import dataclass
 from datetime import UTC
 
@@ -98,11 +99,13 @@ class RagService:
         llm_provider: LLMProvider,
         prompt_builder: RagPromptBuilder,
         min_score: float = 0.15,
+        require_lexical_evidence: bool = True,
     ) -> None:
         self._retrieval_service = retrieval_service
         self._llm_provider = llm_provider
         self._prompt_builder = prompt_builder
         self._min_score = min_score
+        self._require_lexical_evidence = require_lexical_evidence
 
     def answer(self, question: str, history: list[Message]) -> RagAnswer:
         """Return a grounded answer or the standard not-found response."""
@@ -124,6 +127,54 @@ class RagService:
         ]
         if not retrieved:
             return RagAnswer(NOT_FOUND_ANSWER, [], False)
+        if self._require_lexical_evidence and not self._has_lexical_evidence(
+            question, retrieved
+        ):
+            return RagAnswer(NOT_FOUND_ANSWER, [], False)
 
         prompt_messages = self._prompt_builder.build(question, history, retrieved)
         return RagAnswer(self._llm_provider.generate(prompt_messages), citations, True)
+
+    @staticmethod
+    def _has_lexical_evidence(question: str, retrieved: list[RetrievedChunk]) -> bool:
+        """Require meaningful query terms to appear in retrieved evidence."""
+
+        stopwords = {
+            "anche",
+            "come",
+            "cosa",
+            "dalla",
+            "delle",
+            "degli",
+            "della",
+            "dello",
+            "dove",
+            "esso",
+            "fare",
+            "fino",
+            "gli",
+            "il",
+            "la",
+            "le",
+            "nei",
+            "nel",
+            "per",
+            "qual",
+            "quale",
+            "quali",
+            "quanto",
+            "sono",
+            "sul",
+            "sulla",
+            "una",
+            "uno",
+        }
+        query_terms = {
+            term
+            for term in re.findall(r"[a-zàèéìòù]{4,}", question.lower())
+            if term not in stopwords
+        }
+        if not query_terms:
+            return False
+        evidence = " ".join(result.chunk.content.lower() for result in retrieved)
+        return any(term in evidence for term in query_terms)

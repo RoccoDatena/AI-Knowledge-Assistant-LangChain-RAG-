@@ -66,3 +66,30 @@ def test_rag_returns_answer_and_backend_generated_citation() -> None:
     assert result.citations[0].filename == "Manuale.pdf"
     assert result.citations[0].page_number == 3
     assert llm.calls == 1
+
+
+def test_rag_rejects_semantically_similar_but_lexically_unrelated_context() -> None:
+    """The LLM must not answer when retrieved text lacks query evidence."""
+
+    chunk = DocumentChunk(
+        chunk_id="doc-2:0",
+        document_id="doc-2",
+        content="Le sedi di servizio sono indicate nella tabella allegata.",
+        page_number=1,
+        chunk_index=0,
+        document_hash="hash",
+        filename="Bando.pdf",
+    )
+    llm = RecordingLLM()
+    service = RagService(
+        FakeRetrieval([RetrievedChunk(chunk, 0.90)]),
+        llm,
+        RagPromptBuilder(),
+    )
+
+    result = service.answer("Qual è la capitale della Francia?", [])
+
+    assert result.answer == NOT_FOUND_ANSWER
+    assert result.grounded is False
+    assert result.citations == []
+    assert llm.calls == 0

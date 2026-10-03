@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID, uuid4
 
-from app.domain.entities import Conversation, Message
+from app.domain.entities import Conversation, Message, MessageSource
 from app.domain.ports import ConversationRepository
 from app.infrastructure.persistence.atomic_file import atomic_write_text
 
@@ -45,6 +45,17 @@ class JsonConversationRepository(ConversationRepository):
                 role=item["role"],
                 content=item["content"],
                 created_at=datetime.fromisoformat(item["created_at"]),
+                grounded=item.get("grounded"),
+                sources=[
+                    MessageSource(
+                        document_id=source["document_id"],
+                        filename=source["filename"],
+                        page_number=int(source["page_number"]),
+                        chunk_id=source["chunk_id"],
+                        score=float(source["score"]),
+                    )
+                    for source in item.get("sources", [])
+                ],
             )
             for item in payload.get("messages", [])
         ]
@@ -80,6 +91,17 @@ class JsonConversationRepository(ConversationRepository):
                     "role": message.role,
                     "content": message.content,
                     "created_at": message.created_at.isoformat(),
+                    "grounded": message.grounded,
+                    "sources": [
+                        {
+                            "document_id": source.document_id,
+                            "filename": source.filename,
+                            "page_number": source.page_number,
+                            "chunk_id": source.chunk_id,
+                            "score": source.score,
+                        }
+                        for source in message.sources
+                    ],
                 }
                 for message in conversation.messages
             ],

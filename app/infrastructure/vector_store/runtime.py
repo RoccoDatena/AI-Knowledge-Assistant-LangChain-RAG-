@@ -17,7 +17,8 @@ _settings = get_settings()
 _embedding_provider: EmbeddingProvider
 if _settings.embedding_provider == "sentence_transformers":
     _embedding_provider = SentenceTransformersEmbeddingProvider(
-        model_name=_settings.embedding_model
+        model_name=_settings.embedding_model,
+        local_files_only=_settings.embedding_local_files_only,
     )
 else:
     _embedding_provider = HashingEmbeddingProvider()

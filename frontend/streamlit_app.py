@@ -26,6 +26,23 @@ def render_sources(sources: list[dict[str, Any]]) -> None:
             )
 
 
+def render_grounding_status(grounded: bool) -> None:
+    """Show whether the latest answer was supported by retrieved evidence."""
+
+    if grounded:
+        st.badge(
+            "Risposta grounded",
+            icon=":material/check_circle:",
+            color="green",
+        )
+    else:
+        st.badge(
+            "Informazione non trovata",
+            icon=":material/info:",
+            color="orange",
+        )
+
+
 def render_document_panel(client: ApiClient) -> None:
     """Render document management controls."""
 
@@ -166,8 +183,12 @@ def main() -> None:
     try:
         history = client.get_history(st.session_state.conversation_id)
         for message in history["messages"]:
-            with st.chat_message("user" if message["role"] == "user" else "assistant"):
+            is_assistant = message["role"] == "assistant"
+            with st.chat_message("assistant" if is_assistant else "user"):
                 st.markdown(message["content"])
+                if is_assistant and message.get("grounded") is not None:
+                    render_grounding_status(message["grounded"])
+                    render_sources(message.get("sources", []))
     except ApiClientError as exc:
         st.error(f"Impossibile caricare la conversazione [{exc.code}]: {exc}")
     except Exception as exc:
@@ -183,6 +204,7 @@ def main() -> None:
                         st.session_state.conversation_id, question
                     )
                     st.markdown(result["assistant_message"]["content"])
+                    render_grounding_status(result.get("grounded", False))
                     render_sources(result.get("sources", []))
                 except ApiClientError as exc:
                     st.error(f"Risposta non disponibile [{exc.code}]: {exc}")

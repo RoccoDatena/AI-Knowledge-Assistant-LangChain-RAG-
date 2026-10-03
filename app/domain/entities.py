@@ -5,12 +5,25 @@ from datetime import datetime
 
 
 @dataclass(frozen=True)
+class MessageSource:
+    """Persisted source metadata attached to an assistant response."""
+
+    document_id: str
+    filename: str
+    page_number: int
+    chunk_id: str
+    score: float
+
+
+@dataclass(frozen=True)
 class Message:
     """A message exchanged in a conversation."""
 
     role: str
     content: str
     created_at: datetime
+    grounded: bool | None = None
+    sources: list[MessageSource] = field(default_factory=list)
 
 
 @dataclass

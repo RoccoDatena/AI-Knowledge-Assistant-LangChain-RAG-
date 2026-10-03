@@ -172,6 +172,8 @@ For a concise explanation of the project during interviews, see
 
 See [docs/portfolio-demo.md](docs/portfolio-demo.md) for the reproducible end-to-end walkthrough.
 
+For the complete testing strategy, troubleshooting history, and validation evidence, see [docs/engineering-validation.md](docs/engineering-validation.md).
+
 ## License
 
 MIT License. See [LICENSE](LICENSE).
