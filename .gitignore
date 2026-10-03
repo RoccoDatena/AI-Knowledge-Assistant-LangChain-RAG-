@@ -42,3 +42,5 @@ coverage.xml
 
 # Local logs
 *.log
+# Local LinkedIn visual prompt
+docs/linkedin-visual-prompt.md

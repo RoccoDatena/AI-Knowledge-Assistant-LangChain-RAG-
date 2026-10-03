@@ -172,6 +172,14 @@ For a concise explanation of the project during interviews, see
 
 See [docs/portfolio-demo.md](docs/portfolio-demo.md) for the reproducible end-to-end walkthrough.
 
+### UI screenshots
+
+![Grounded answer with citations](docs/assets/screenshots/01-grounded-answer.png)
+
+![Safe refusal for unsupported questions](docs/assets/screenshots/02-information-not-found.png)
+
+![Semantic search diagnostics](docs/assets/screenshots/03-semantic-search.png)
+
 For the complete testing strategy, troubleshooting history, and validation evidence, see [docs/engineering-validation.md](docs/engineering-validation.md).
 
 ## License
