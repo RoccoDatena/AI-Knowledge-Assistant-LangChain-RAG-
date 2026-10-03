@@ -74,6 +74,21 @@ def render_document_panel(client: ApiClient) -> None:
         st.sidebar.warning(f"Backend non disponibile: {exc}")
 
 
+def render_conversation_controls(client: ApiClient) -> None:
+    """Render controls for starting a fresh conversation session."""
+
+    st.sidebar.subheader("Conversazione")
+    if st.sidebar.button("Nuova conversazione"):
+        try:
+            conversation = client.create_conversation()
+            st.session_state.conversation_id = conversation["conversation_id"]
+            st.rerun()
+        except ApiClientError as exc:
+            st.sidebar.error(f"Impossibile creare la conversazione [{exc.code}]")
+        except Exception as exc:
+            st.sidebar.error(f"Impossibile creare la conversazione: {exc}")
+
+
 def render_search_panel(client: ApiClient) -> None:
     """Render an optional semantic search panel with metadata filters."""
 
@@ -145,6 +160,7 @@ def main() -> None:
             st.error(f"Backend non disponibile: {exc}")
             return
 
+    render_conversation_controls(client)
     render_document_panel(client)
     render_search_panel(client)
     try:
